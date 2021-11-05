@@ -10,7 +10,7 @@ Every paste is available for everyone!!!
 Originally developed as a project for BSU "High Load Web Systems" course.
 
 
-## What PrivateBin provides
+## What PublicBin provides
 
 
 + Pastebin-like system to store text documents, code samples, etc.
