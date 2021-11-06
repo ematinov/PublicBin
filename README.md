@@ -15,7 +15,6 @@ Originally developed as a project for BSU "High Load Web Systems" course.
 
 + Pastebin-like system to store text documents, code samples, etc.
 
-+ Possibility to get random paste of another user.
 
 
 ## What it doesn't provide
