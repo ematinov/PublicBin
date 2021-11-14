@@ -15,6 +15,7 @@ def jsonify(**data):
 @app.on_event("startup")
 async def startup():
     db.connect()
+    db.create_texts()
 
 @app.on_event("shutdown")
 async def shutdown():
