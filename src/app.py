@@ -9,7 +9,7 @@ db = Database()
 
 
 def jsonify(**data):
-    return dict(data)
+    return data
 
 
 @app.on_event("startup")
