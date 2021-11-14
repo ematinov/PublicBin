@@ -46,7 +46,7 @@ class Database:
     def insert_text(self, text: str):
         con = self.con
         with con:
-            con.execute(INSERT, (text,))
+            return con.execute(INSERT, (text,)).lastrowid
 
     def get_indexes(self):
         return [data[0] for data in self.con.execute(GET_IDS)]
@@ -63,8 +63,8 @@ if __name__ == "__main__":
     db.connect()
     db.create_texts()
 
-    db.insert_text("some text")
-    db.insert_text("some text 2")
+    print(db.insert_text("some text"))
+    print(db.insert_text("some text 2"))
 
     print(db.get_indexes())
 
