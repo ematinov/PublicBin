@@ -1,20 +1,20 @@
-import sqlite3 as sql
+import pymongo
 
 
-CREATE_TABLE = """
-CREATE TABLE texts (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    text TEXT
-);
-"""
-DROP_TABLE = "DROP TABLE texts"
-INSERT = "INSERT INTO texts (text) values(?)"
-GET_IDS = "SELECT id FROM texts"
-GET_TEXT = "SELECT text FROM texts WHERE id=?"
+def get_next_id(cur):
+    return cur.find_one_and_update(filter={'_id': 'last_id'}, update={'$inc': {'value': 1}}, new=True)['value']
+
+pwd = 'InsertHere'
+client = pymongo.MongoClient(
+    f"mongodb+srv://user-741:{pwd}@pastebincluster.opwxr.mongodb.net/PasteBin?retryWrites=true&w=majority",
+    read_preference=pymongo.ReadPreference.SECONDARY_PREFERRED
+    )
+client_db = client["publicbin"]
+client_col = client_db["texts"]
 
 
 class Database:
-    con: sql.Connection
+    con: pymongo.collection.Collection
 
     def __init__(self):
         self.con = None
@@ -22,39 +22,40 @@ class Database:
     def connect(self):
         if self.con:
             raise ValueError("Database already connected")
-        self.con = sql.connect('texts.db')
+        client_db = client["publicbin"]
+        self.con = client_db["texts"]
 
     def disconnect(self):
         if self.con is None:
             raise ValueError("Database isn't connected")
-        self.con.close()
         self.con = None
 
     def create_texts(self):
-        con = self.con
         try:
-            with con:
-                con.execute(CREATE_TABLE)
-        except sql.OperationalError:
+            self.con.insert_one({'_id': 'last_id' , 'value': 0})
+        except pymongo.errors.DuplicateKeyError:
             pass
 
     def drop_texts(self):
-        con = self.con
-        with con:
-            con.execute(DROP_TABLE)
+        self.con.drop()
             
     def insert_text(self, text: str):
         con = self.con
-        with con:
-            return con.execute(INSERT, (text,)).lastrowid
+
+        return con.insert_one({'_id': get_next_id(con), 'text': text}).inserted_id
 
     def get_indexes(self):
-        return [data[0] for data in self.con.execute(GET_IDS)]
+        id = self.con.find_one({'_id': 'last_id'})['value']
+
+        return 1, id
 
     def get_text(self, id: int):
-        ret = self.con.execute(GET_TEXT, (id,)).fetchone()
+        ret = self.con.find_one({'_id': id})
 
-        return ret if ret is None else ret[0]
+        if ret is None:
+            return ret
+
+        return ret['text']
 
 
 if __name__ == "__main__":

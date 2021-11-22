@@ -23,8 +23,8 @@ async def shutdown():
 
 @app.get("/indexes")
 async def get_indexes():
-    indexes = db.get_indexes()
-    return jsonify(indexes=indexes)
+    first_id, last_id = db.get_indexes()
+    return jsonify(first_id=first_id, last_id=last_id)
 
 @app.get("/texts/{item_id}", response_model=TextWithId)
 async def read_text(item_id: int):
