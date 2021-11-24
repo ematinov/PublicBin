@@ -13,21 +13,21 @@ def jsonify(**data):
 
 
 @app.on_event("startup")
-async def startup():
+def startup():
     db.connect()
     db.create_texts()
 
 @app.on_event("shutdown")
-async def shutdown():
+def shutdown():
     db.disconnect()
 
 @app.get("/indexes")
-async def get_indexes():
+def get_indexes():
     first_id, last_id = db.get_indexes()
     return jsonify(first_id=first_id, last_id=last_id)
 
 @app.get("/texts/{item_id}", response_model=TextWithId)
-async def read_text(item_id: int):
+def read_text(item_id: int):
     text = db.get_text(item_id)
 
     if text is None:
@@ -36,7 +36,7 @@ async def read_text(item_id: int):
     return jsonify(id=item_id, text=text)
 
 @app.post("/texts", response_model=TextWithId)
-async def write_text(text: Text):
+def write_text(text: Text):
     text = text.text
     id = db.insert_text(text)
     return jsonify(id=id, text=text)
