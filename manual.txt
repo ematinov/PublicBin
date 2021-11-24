@@ -1,0 +1,5 @@
+1. install packages from requirements.txt
+2. add given password to database.py instead of "InsertHere"
+3. run main.py
+
+For docs and easy function check use "/docs" path.
