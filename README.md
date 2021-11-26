@@ -20,3 +20,8 @@ Originally developed as a project for BSU "High Load Web Systems" course.
 ## What it doesn't provide
 
 - Privacy of data sent to server.
+
+
+## CAP and docs
+
+https://docs.google.com/document/d/1KaiHwtzvflqZDZSVfFqh7MwLGHbk83RlVZPiKh57qGo/edit?usp=sharing 
